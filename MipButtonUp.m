@@ -17,11 +17,16 @@ function MipButtonUp(src,event)
     xCenter = recPosZ_xy(1) + xRad;
     zCenter = recPosX_zy(1) + zRad;
     
+    set(REC_HANDLES(1),'lineStyle','-');
+    set(REC_HANDLES(2),'lineStyle','-');
+    set(REC_HANDLES(3),'lineStyle','-');
+    
     [frapCorrected, frapMean] = CalcFrapCurves([yCenter,xCenter,zCenter],[yRad,xRad,zRad],IM,IM_METADATA,FLOUR_MEAN_PER_T,IM_METADATA.FrapChannel);
     
     hold(AXES_HANDLES(4),'off');
     plot(IM_METADATA.TimeStampDelta,frapMean,'o','DisplayName','Raw FRAP data','parent',AXES_HANDLES(4));
     hold(AXES_HANDLES(4),'on');
     plot(IM_METADATA.TimeStampDelta,frapCorrected,'o','DisplayName','Corrected FRAP data','parent',AXES_HANDLES(4));
-    legend(AXES_HANDLES(4))
+    legend(AXES_HANDLES(4),'Location','southeast')
+    
 end

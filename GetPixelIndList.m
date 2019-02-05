@@ -14,4 +14,6 @@ function pixelIndList = GetPixelIndList(center_rcz,radius_rcz,imSize_rcz)
     pixelList_rcz = seCoord_rcz * seT_rcz * recT_rcz;
     pixelList_rcz = pixelList_rcz(:,1:3);
     pixelIndList = Utils.CoordToInd(imSize_rcz,pixelList_rcz);
+    pixelIndList = pixelIndList(pixelIndList>0);
+    pixelIndList = pixelIndList(pixelIndList<=prod(imSize_rcz));
 end

@@ -1,7 +1,6 @@
 function MipButtonDown(src,event)
     global FIGURE_HANDLE AXES_HANDLES REC_HANDLES
     
-    m = get(FIGURE_HANDLE,'CurrentModifier');
     selectedAxes = find(event.Source.CurrentAxes == AXES_HANDLES);
     if (selectedAxes>3)
         return
@@ -24,10 +23,13 @@ function MipButtonDown(src,event)
     
     ud = get(FIGURE_HANDLE,'UserData');
     
-    if (isempty(ud) || ~ud.IsDown)
+    if (~ud.IsDown)
         ud.IsDown = true;
-        set(FIGURE_HANDLE,'UserData',ud);
+        ud.PointDown_xy = pointDown_xy;
+        set(FIGURE_HANDLE,'UserData',ud);            
         
-        UpdateRecCenter(pointDown_xy,selectedAxes,REC_HANDLES);
+        if (~ud.ShiftKey && ~ud.ControlKey && ~ud.AltKey)
+            UpdateRecCenter(pointDown_xy,selectedAxes,REC_HANDLES,':');
+        end
     end
 end

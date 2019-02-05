@@ -28,11 +28,26 @@ function CreateFigure(im,channel)
     midY_rc = round(sizeY_rc./2);
     radY_rc = [10,10];
     recPosY_rc = [midY_rc-radY_rc, radY_rc.*2];
+    
+    yRatio = floor(size(im,1)/size(im,3));
+    xRatio = floor(size(im,2)/size(im,3));
+    
+    numPlotY = yRatio +1;
+    numPlotX = xRatio +1;
+    
+    plots_xy = [];
+    for i=1:yRatio
+        plots_xy = [plots_xy,[1:xRatio] + (i-1)*numPlotX];
+    end
+    
+    plots_zy = [1:yRatio] * numPlotX;
+    plots_xz = (numPlotY-1)*numPlotX+1:(numPlotY-1)*numPlotX+xRatio;
+    plots_frap = (numPlotY-1)*numPlotX+xRatio+1:numPlotX*numPlotY;
 
     FIGURE_HANDLE = figure;
-    AXES_HANDLES(1) = subplot(2,3,1);
-    AXES_HANDLES(2) = subplot(2,3,2);
-    AXES_HANDLES(3) = subplot(2,3,3);
+    AXES_HANDLES(1) = subplot(numPlotY,numPlotX,plots_xy);
+    AXES_HANDLES(2) = subplot(numPlotY,numPlotX,plots_zy);
+    AXES_HANDLES(3) = subplot(numPlotY,numPlotX,plots_xz);
 
     imshowpair(im1Z,imEndZ,'parent',AXES_HANDLES(1))
     hold(AXES_HANDLES(1),'on')
@@ -49,10 +64,19 @@ function CreateFigure(im,channel)
     REC_HANDLES(3) = rectangle('Position',recPosY_rc([2,1,4,3]),'Curvature',[1 1],'edgecolor','m','linewidth',2,'parent',AXES_HANDLES(3));
     title(AXES_HANDLES(3),'Y Projection')
 
-    AXES_HANDLES(4) = subplot(2,3,4:6);
+    AXES_HANDLES(4) = subplot(numPlotY,numPlotX,plots_frap);
     title(AXES_HANDLES(4),'Frap Data');
 
     set(FIGURE_HANDLE,'WindowButtonDownFcn',@MipButtonDown,...
         'WindowButtonMotionFcn',@MipButtonMotion,...
-        'WindowButtonUpFcn',@MipButtonUp);
+        'WindowButtonUpFcn',@MipButtonUp,...
+        'WindowKeyPressFcn',@MipKeyDown,...
+        'WindowKeyReleaseFcn',@MipKeyUp);
+    
+    ud.IsDown = false;
+    ud.AltKey = false;
+    ud.ControlKey = false;
+    ud.ShiftKey = false;
+    
+    set(FIGURE_HANDLE,'UserData',ud);
 end
