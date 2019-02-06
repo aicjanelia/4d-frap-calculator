@@ -27,9 +27,10 @@ function MipButtonMotion(src,event)
     end
     
     if (ud.ShiftKey)
-        dif = pointDown_xy - ud.PointDown_xy;
+        dif = (pointDown_xy - ud.PointDown_xy);
         UpdateRecSize(ud.PointDown_xy,dif,selectedAxes,REC_HANDLES,'--');
         ud.PointDown_xy = pointDown_xy;
+        set(FIGURE_HANDLE,'UserData',ud);
     else
         UpdateRecCenter(pointDown_xy,selectedAxes,REC_HANDLES,':');
     end
