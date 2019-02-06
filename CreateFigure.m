@@ -1,28 +1,34 @@
-function CreateFigure(im,channel)
-    global FIGURE_HANDLE AXES_HANDLES REC_HANDLES FLOUR_MEAN_PER_T
+function CreateFigure(im,imMeta,channel,satLevel)
+    global FIGURE_HANDLE AXES_HANDLES REC_HANDLES
+    
+    if (~exist('satLevel','var') || isempty(satLevel))
+        satLevel = 0.95;
+    end
+    
+    CalculatePhotoBleaching(im,channel,imMeta);
 
     im1 = mat2gray(im(:,:,:,channel,1));
     imEnd = mat2gray(im(:,:,:,channel,end));
 
-    im1Z = ImUtils.BrightenImages(max(im1,[],3));
-    imEndZ = ImUtils.BrightenImages(max(imEnd,[],3));
+    im1Z = ImUtils.BrightenImages(max(im1,[],3),'uint8',satLevel);
+    imEndZ = ImUtils.BrightenImages(max(imEnd,[],3),'uint8',satLevel);
     sizeZ_rc = size(im1Z);
     midZ_rc = round(sizeZ_rc./2);
     radZ_rc = [10,10];
     recPosZ_rc = [midZ_rc-radZ_rc, radZ_rc.*2];
 
-    im1X = ImUtils.BrightenImages(max(im1,[],2));
+    im1X = ImUtils.BrightenImages(max(im1,[],2),'uint8',satLevel);
     im1X = permute(im1X,[1,3,2]);
-    imEndX = ImUtils.BrightenImages(max(imEnd,[],2));
+    imEndX = ImUtils.BrightenImages(max(imEnd,[],2),'uint8',satLevel);
     imEndX = permute(imEndX,[1,3,2]);
     sizeX_rc = size(im1X);
     midX_rc = round(sizeX_rc./2);
     radX_rc = [10,10];
     recPosX_rc = [midX_rc-radX_rc, radX_rc.*2];
 
-    im1Y = ImUtils.BrightenImages(max(im1,[],1));
+    im1Y = ImUtils.BrightenImages(max(im1,[],1),'uint8',satLevel);
     im1Y = permute(im1Y,[3,2,1]);
-    imEndY = ImUtils.BrightenImages(max(imEnd,[],1));
+    imEndY = ImUtils.BrightenImages(max(imEnd,[],1),'uint8',satLevel);
     imEndY = permute(imEndY,[3,2,1]);
     sizeY_rc = size(im1Y);
     midY_rc = round(sizeY_rc./2);
