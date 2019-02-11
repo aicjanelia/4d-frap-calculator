@@ -1,5 +1,5 @@
-function UpdateFRAPplot()
-    global REC_HANDLES AXES_HANDLES IM IM_METADATA FLOUR_MEAN_PER_T TEXT_HANDLES
+function UpdateFRAPplot(src,event)
+    global REC_HANDLES AXES_HANDLES IM IM_METADATA FLOUR_MEAN_PER_T TEXT_HANDLES BUSY_ANNOTATION OUTDATED_ANNOTATION
 
     recPosZ_xy = get(REC_HANDLES(1),'Position');
     recPosX_zy = get(REC_HANDLES(2),'Position');
@@ -12,7 +12,11 @@ function UpdateFRAPplot()
     xCenter = recPosZ_xy(1) + xRad;
     zCenter = recPosX_zy(1) + zRad;
 
+    BUSY_ANNOTATION.Visible = true;
+    drawnow()
+    
     [frapCorrected, frapMean, fitMetrics] = CalcFrapCurves([yCenter,xCenter,zCenter],[yRad,xRad,zRad],IM,IM_METADATA,FLOUR_MEAN_PER_T,IM_METADATA.FrapChannel);
+    BUSY_ANNOTATION.Visible = false;
     
     hold(AXES_HANDLES(4),'off');
     plot(IM_METADATA.TimeStampDelta,frapMean,'o','DisplayName','Raw FRAP data','parent',AXES_HANDLES(4));
@@ -24,4 +28,6 @@ function UpdateFRAPplot()
     ylabel(AXES_HANDLES(4),'Intensity (au)')
     
     set(TEXT_HANDLES(1),'string',sprintf('A=%.02f +/- %.02f   t1/2=%.02f +/- %.02f   R-squared:%.02f',fitMetrics.A,fitMetrics.A_confidance,fitMetrics.thalf,fitMetrics.thalf_confidance,fitMetrics.Rsquared));
+    
+    OUTDATED_ANNOTATION.Visible = false;
 end

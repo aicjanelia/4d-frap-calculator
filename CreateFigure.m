@@ -1,5 +1,5 @@
 function CreateFigure(im,imMeta,channel,satLevel)
-    global FIGURE_HANDLE AXES_HANDLES REC_HANDLES TEXT_HANDLES
+    global FIGURE_HANDLE AXES_HANDLES REC_HANDLES TEXT_HANDLES BUSY_ANNOTATION OUTDATED_ANNOTATION
     
     if (~exist('satLevel','var') || isempty(satLevel))
         satLevel = 0.95;
@@ -102,23 +102,61 @@ function CreateFigure(im,imMeta,channel,satLevel)
     ud.ControlKey = false;
     ud.ShiftKey = false;
 %     
-    bh = uicontrol('Parent',FIGURE_HANDLE,'Style','pushbutton','String','Rest ROI','Units','normalized','Position',[545/width 50/height 100/width 22/height],'Visible','on','Callback',@ROIreset);
-    bh2 = uicontrol('Parent',FIGURE_HANDLE,'Style','pushbutton','String','Export to file','Units','normalized','Position',[545/width 90/height 100/width 22/height],'Visible','on','Callback',@ExportCSV);
+    bh = uicontrol('Parent',FIGURE_HANDLE,'Style','pushbutton',...
+        'String','Rest ROI',...
+        'Units','normalized','Position',[525/width 70/height 125/width 30/height],...
+        'Visible','on','Callback',@ROIreset);
+    
+    bh1 = uicontrol('Parent',FIGURE_HANDLE,'Style','pushbutton',...
+        'String','Update FRAP Curve',...
+        'Units','normalized','Position',[525/width 105/height 125/width 30/height],...
+        'Visible','on','Callback',@UpdateFRAPplot);
+    
+    bh2 = uicontrol('Parent',FIGURE_HANDLE,'Style','pushbutton',...
+        'String','Export to file',...
+        'Units','normalized','Position',[525/width 35/height 125/width 30/height],...
+        'Visible','on','Callback',@ExportCSV);
+    
     TEXT_HANDLES(1) = uicontrol('Parent',FIGURE_HANDLE,'Style','edit','fontsize',14,...
         'String','A=0.00 +/-0.00  t1/2=0.00 +/-0.00  R-squared:0.00',...
         'Units','normalized','Position',[745/width  45/height 500/width 75/height],'Visible','on');
     
     t = annotation('textbox');
     t.Interpreter = 'none';
-    t.Position = [1300/width  25/height 275/width 125/height];
+    t.Position = [1300/width  25/height 270/width 125/height];
     t.String = {...
-        'Green is the first frame of the movie.';
-        'Magenta is the last frame of the movie.';
-        '';
-        'Clicking & drag will move the ROI.';
-        'Holding the shift key while clicking &';
-        '    dragging will change the radius of the';
-        '    ROI'};
+        '• Green is the first frame of the movie.';
+        '• Magenta is the last frame of the movie.';
+        '• Clicking & drag will move the ROI.';
+        '• Holding the shift key while clicking &';
+        'dragging will change the radius of the ROI'};
+    t.HorizontalAlignment = 'center';
+    t.VerticalAlignment = 'middle';
+    
+    OUTDATED_ANNOTATION = annotation('textbox');
+    OUTDATED_ANNOTATION.Interpreter = 'none';
+    OUTDATED_ANNOTATION.Position = get(AXES_HANDLES(4),'position');
+    OUTDATED_ANNOTATION.String = {'Outdated FRAP Curve'};
+    OUTDATED_ANNOTATION.FontSize = 24;
+    OUTDATED_ANNOTATION.Color = 'r';
+    OUTDATED_ANNOTATION.BackgroundColor = 'k';
+    OUTDATED_ANNOTATION.FaceAlpha = 0.25;
+    OUTDATED_ANNOTATION.HorizontalAlignment = 'center';
+    OUTDATED_ANNOTATION.VerticalAlignment = 'middle';
+    OUTDATED_ANNOTATION.Visible = false;
+    
+    BUSY_ANNOTATION = annotation('textbox');
+    BUSY_ANNOTATION.Interpreter = 'none';
+    BUSY_ANNOTATION.Position = [0,0,1,1];
+    BUSY_ANNOTATION.String = {'Calculating FRAP Curve'};
+    BUSY_ANNOTATION.FontSize = 24;
+    BUSY_ANNOTATION.Color = 'r';
+    BUSY_ANNOTATION.BackgroundColor = 'k';
+    BUSY_ANNOTATION.FaceAlpha = 0.75;
+    BUSY_ANNOTATION.HorizontalAlignment = 'center';
+    BUSY_ANNOTATION.VerticalAlignment = 'middle';
+    BUSY_ANNOTATION.Visible = false;
+    
 %     
 %     aH = uicontrol('Parent',FIGURE_HANDLE,'Style','text','String','A(1)','Units','normalized','position',[0.01 0.85 0.05 0.09]);
 %     tH = uicontrol('Parent',FIGURE_HANDLE,'Style','text','String','t 1/2(1)','Units','normalized','position',[0.01 0.8 0.08 0.09]);

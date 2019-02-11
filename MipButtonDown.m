@@ -1,5 +1,5 @@
 function MipButtonDown(src,event)
-    global FIGURE_HANDLE AXES_HANDLES REC_HANDLES
+    global FIGURE_HANDLE AXES_HANDLES REC_HANDLES OUTDATED_ANNOTATION
     
     selectedAxes = find(event.Source.CurrentAxes == AXES_HANDLES);
     if (selectedAxes>3)
@@ -24,6 +24,7 @@ function MipButtonDown(src,event)
     ud = get(FIGURE_HANDLE,'UserData');
     
     if (~ud.IsDown)
+        OUTDATED_ANNOTATION.Visible = true;
         ud.IsDown = true;
         ud.PointDown_xy = pointDown_xy;
         set(FIGURE_HANDLE,'UserData',ud);            

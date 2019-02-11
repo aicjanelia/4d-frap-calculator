@@ -10,5 +10,5 @@ function MipButtonUp(src,event)
     set(REC_HANDLES(2),'lineStyle','-');
     set(REC_HANDLES(3),'lineStyle','-');
 
-    UpdateFRAPplot();
+    %UpdateFRAPplot();
 end
