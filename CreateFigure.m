@@ -1,5 +1,5 @@
 function CreateFigure(im,imMeta,channel,satLevel)
-    global FIGURE_HANDLE AXES_HANDLES REC_HANDLES
+    global FIGURE_HANDLE AXES_HANDLES REC_HANDLES TEXT_HANDLES
     
     if (~exist('satLevel','var') || isempty(satLevel))
         satLevel = 0.95;
@@ -51,28 +51,46 @@ function CreateFigure(im,imMeta,channel,satLevel)
     plots_frap = (numPlotY-1)*numPlotX+xRatio+1:numPlotX*numPlotY;
 
     FIGURE_HANDLE = figure;
-    AXES_HANDLES(1) = subplot(numPlotY,numPlotX,plots_xy);
-    AXES_HANDLES(2) = subplot(numPlotY,numPlotX,plots_zy);
-    AXES_HANDLES(3) = subplot(numPlotY,numPlotX,plots_xz);
+    startPoint = [100,100];
+    width = 960;
+    height = 1080;
+    set(FIGURE_HANDLE,'name','FRAP ROI Selector','units','pixels','Position',[startPoint,width,height]);
+%     AXES_HANDLES(1) = subplot(numPlotY,numPlotX,plots_xy);
+    AXES_HANDLES(1) = subplot('Position',[5/width 200/height 500/width 850/height]);
+%     AXES_HANDLES(2) = subplot(numPlotY,numPlotX,plots_zy);
+    AXES_HANDLES(2) = subplot('Position',[510/width 200/height 150/width 850/height]);
+%     AXES_HANDLES(3) = subplot(numPlotY,numPlotX,plots_xz);
+    AXES_HANDLES(3) = subplot('Position',[5/width 10/height 500/width 160/height]);
 
+    recColor = [0.3451, 0.5529, 1.0000];
+%     recColor = [0.9255, 0.6275, 0.1176];
     imshowpair(im1Z,imEndZ,'parent',AXES_HANDLES(1))
     hold(AXES_HANDLES(1),'on')
-    REC_HANDLES(1) = rectangle('Position',recPosZ_rc([2,1,4,3]),'Curvature',[1 1],'edgecolor','m','linewidth',2,'parent',AXES_HANDLES(1));
+    REC_HANDLES(1) = rectangle('Position',recPosZ_rc([2,1,4,3]),'Curvature',[1 1],'edgecolor',recColor,'linewidth',3,'parent',AXES_HANDLES(1));
     title(AXES_HANDLES(1),'Z Projection')
+%     xlabel(AXES_HANDLES(1),'X'); %position needs to be fixed
+%     ylabel(AXES_HANDLES(1),'Y')
 
     imshowpair(im1X,imEndX,'parent',AXES_HANDLES(2))
     hold(AXES_HANDLES(2),'on');
-    REC_HANDLES(2) = rectangle('Position',recPosX_rc([2,1,4,3]),'Curvature',[1 1],'edgecolor','m','linewidth',2,'parent',AXES_HANDLES(2));
+    REC_HANDLES(2) = rectangle('Position',recPosX_rc([2,1,4,3]),'Curvature',[1 1],'edgecolor',recColor,'linewidth',3,'parent',AXES_HANDLES(2));
     title(AXES_HANDLES(2),'X Projection')
+%     xlabel(AXES_HANDLES(2),'Z'); %position needs to be fixed
+%     ylabel(AXES_HANDLES(2),'Y')
 
     imshowpair(im1Y,imEndY,'parent',AXES_HANDLES(3))
     hold(AXES_HANDLES(3),'on');
-    REC_HANDLES(3) = rectangle('Position',recPosY_rc([2,1,4,3]),'Curvature',[1 1],'edgecolor','m','linewidth',2,'parent',AXES_HANDLES(3));
+    REC_HANDLES(3) = rectangle('Position',recPosY_rc([2,1,4,3]),'Curvature',[1 1],'edgecolor',recColor,'linewidth',3,'parent',AXES_HANDLES(3));
     title(AXES_HANDLES(3),'Y Projection')
+%     xlabel(AXES_HANDLES(3),'X'); %position needs to be fixed
+%     ylabel(AXES_HANDLES(3),'Z')
 
-    AXES_HANDLES(4) = subplot(numPlotY,numPlotX,plots_frap);
+%     AXES_HANDLES(4) = subplot(numPlotY,numPlotX,plots_frap);
+    AXES_HANDLES(4) = subplot('Position',[60/width+500/width  35/height 385/width 120/height]);
     title(AXES_HANDLES(4),'Frap Data');
-
+    xlabel(AXES_HANDLES(4),'Time (s)')
+    ylabel(AXES_HANDLES(4),'Intensity (au)')
+    
     set(FIGURE_HANDLE,'WindowButtonDownFcn',@MipButtonDown,...
         'WindowButtonMotionFcn',@MipButtonMotion,...
         'WindowButtonUpFcn',@MipButtonUp,...
@@ -83,6 +101,27 @@ function CreateFigure(im,imMeta,channel,satLevel)
     ud.AltKey = false;
     ud.ControlKey = false;
     ud.ShiftKey = false;
+%     
+    bh = uicontrol('Parent',FIGURE_HANDLE,'Style','pushbutton','String','Rest ROI','Units','normalized','Position',[770/width 870/height 100/width 22/height],'Visible','on','Callback',@ROIreset);
+    bh2 = uicontrol('Parent',FIGURE_HANDLE,'Style','pushbutton','String','Export to file','Units','normalized','Position',[770/width 875/height 100/width 22/height],'Visible','on','Callback',@ExportCSV);
+    TEXT_HANDLES(1) = uicontrol('Parent',FIGURE_HANDLE,'Style','edit','String','A=0.00 (+/-0.00)  t1/2=0.00(+/-0.00)  R-squared:0.00','Units','normalized','Position',[670/width  200/height 275/width 25/height],'Visible','on');
     
+    t = annotation('textbox');
+    t.Interpreter = 'none';
+    t.Position = [670/width  920/height 275/width 125/height];
+    t.String = {...
+        'Green is the first frame of the movie.';
+        'Magenta is the last frame of the movie.';
+        '';
+        'Clicking & drag will move the ROI.';
+        'Holding the shift key while clicking &';
+        '    dragging will change the radius of the';
+        '    ROI'};
+%     
+%     aH = uicontrol('Parent',FIGURE_HANDLE,'Style','text','String','A(1)','Units','normalized','position',[0.01 0.85 0.05 0.09]);
+%     tH = uicontrol('Parent',FIGURE_HANDLE,'Style','text','String','t 1/2(1)','Units','normalized','position',[0.01 0.8 0.08 0.09]);
+%     a2H = uicontrol('Parent',FIGURE_HANDLE,'Style','text','String','A(2)','Units','normalized','position',[0.01 0.75 0.05 0.09]);
+%     t2H = uicontrol('Parent',FIGURE_HANDLE,'Style','text','String','t 1/2(2)','Units','normalized','position',[0.01 0.7 0.08 0.09]);
+%     
     set(FIGURE_HANDLE,'UserData',ud);
 end
