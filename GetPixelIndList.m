@@ -1,4 +1,5 @@
 function pixelIndList = GetPixelIndList(center_rcz,radius_rcz,imSize_rcz)
+    radius_rcz = max([1,1,1],radius_rcz);
     se = HIP.MakeEllipsoidMask(radius_rcz);
     ind = find(se);
     seCoord_rcz = Utils.IndToCoord(size(se),ind);
