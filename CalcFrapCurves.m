@@ -5,10 +5,13 @@ function [frapCorrected, frapMean, fitMetrics] = CalcFrapCurves(center_rcz,radiu
     for t=1:imMetadata.NumberOfFrames
         curIm = im(:,:,:,channel,t);
         flourVals = curIm(maskInd);
-        frapMean(t) = mean(flourVals(:));
+        frapMean(t) = max(eps,mean(flourVals(:)));
     end
     
-    frapMean = ImUtils.ConvertType(frapMean,'double',true);
+    if (~any(frapMean==eps))
+        frapMean = ImUtils.ConvertType(frapMean,'double',true);
+    end
+
     frapCorrected = frapMean./flourMean;
     
     frapCorrected = frapCorrected./max(frapCorrected);% TODO: change this when we have a starting frame that is past the first frame
