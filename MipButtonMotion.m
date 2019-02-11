@@ -2,7 +2,7 @@ function MipButtonMotion(src,event)
     global FIGURE_HANDLE AXES_HANDLES REC_HANDLES
     
     ud = get(FIGURE_HANDLE,'UserData');
-    if (~ud.IsDown)
+    if (isempty(ud) || ~ud.IsDown)
         return
     end        
     
