@@ -23,5 +23,5 @@ function UpdateFRAPplot()
     xlabel(AXES_HANDLES(4),'Time (s)')
     ylabel(AXES_HANDLES(4),'Intensity (au)')
     
-    set(TEXT_HANDLES(1),'string',sprintf('A=%.02f (+/-%.02f)  t1/2=%.02f(+/-%.02f)  R-squared:%.02f',fitMetrics.A,fitMetrics.A_confidance,fitMetrics.thalf,fitMetrics.thalf_confidance,fitMetrics.Rsquared));
+    set(TEXT_HANDLES(1),'string',sprintf('A=%.02f +/- %.02f   t1/2=%.02f +/- %.02f   R-squared:%.02f',fitMetrics.A,fitMetrics.A_confidance,fitMetrics.thalf,fitMetrics.thalf_confidance,fitMetrics.Rsquared));
 end

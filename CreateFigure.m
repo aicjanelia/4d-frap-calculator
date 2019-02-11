@@ -52,7 +52,7 @@ function CreateFigure(im,imMeta,channel,satLevel)
 
     FIGURE_HANDLE = figure;
     startPoint = [100,100];
-    width = 960;
+    width = 1650;
     height = 1080;
     set(FIGURE_HANDLE,'name','FRAP ROI Selector','units','pixels','Position',[startPoint,width,height]);
 %     AXES_HANDLES(1) = subplot(numPlotY,numPlotX,plots_xy);
@@ -86,7 +86,7 @@ function CreateFigure(im,imMeta,channel,satLevel)
 %     ylabel(AXES_HANDLES(3),'Z')
 
 %     AXES_HANDLES(4) = subplot(numPlotY,numPlotX,plots_frap);
-    AXES_HANDLES(4) = subplot('Position',[60/width+500/width  35/height 385/width 120/height]);
+    AXES_HANDLES(4) = subplot('Position',[750/width 225/height 800/width 800/height]);
     title(AXES_HANDLES(4),'Frap Data');
     xlabel(AXES_HANDLES(4),'Time (s)')
     ylabel(AXES_HANDLES(4),'Intensity (au)')
@@ -102,13 +102,15 @@ function CreateFigure(im,imMeta,channel,satLevel)
     ud.ControlKey = false;
     ud.ShiftKey = false;
 %     
-    bh = uicontrol('Parent',FIGURE_HANDLE,'Style','pushbutton','String','Rest ROI','Units','normalized','Position',[770/width 870/height 100/width 22/height],'Visible','on','Callback',@ROIreset);
-    bh2 = uicontrol('Parent',FIGURE_HANDLE,'Style','pushbutton','String','Export to file','Units','normalized','Position',[770/width 875/height 100/width 22/height],'Visible','on','Callback',@ExportCSV);
-    TEXT_HANDLES(1) = uicontrol('Parent',FIGURE_HANDLE,'Style','edit','String','A=0.00 (+/-0.00)  t1/2=0.00(+/-0.00)  R-squared:0.00','Units','normalized','Position',[670/width  200/height 275/width 25/height],'Visible','on');
+    bh = uicontrol('Parent',FIGURE_HANDLE,'Style','pushbutton','String','Rest ROI','Units','normalized','Position',[545/width 50/height 100/width 22/height],'Visible','on','Callback',@ROIreset);
+    bh2 = uicontrol('Parent',FIGURE_HANDLE,'Style','pushbutton','String','Export to file','Units','normalized','Position',[545/width 90/height 100/width 22/height],'Visible','on','Callback',@ExportCSV);
+    TEXT_HANDLES(1) = uicontrol('Parent',FIGURE_HANDLE,'Style','edit','fontsize',14,...
+        'String','A=0.00 +/-0.00  t1/2=0.00 +/-0.00  R-squared:0.00',...
+        'Units','normalized','Position',[745/width  45/height 500/width 75/height],'Visible','on');
     
     t = annotation('textbox');
     t.Interpreter = 'none';
-    t.Position = [670/width  920/height 275/width 125/height];
+    t.Position = [1300/width  25/height 275/width 125/height];
     t.String = {...
         'Green is the first frame of the movie.';
         'Magenta is the last frame of the movie.';
