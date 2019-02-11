@@ -8,9 +8,9 @@ function ROIreset(src,event)
     recPosX_zy = [center_xyz([3,2])-size_xy, size_xy.*2];
     recPosY_xz = [center_xyz([1,3])-size_xy, size_xy.*2];
     
-    set(REC_HANDLES(1),'Position',recPosZ_xy,'Curvature',[1 1],'edgecolor','m','linewidth',2);
-    set(REC_HANDLES(2),'Position',recPosX_zy,'Curvature',[1 1],'edgecolor','m','linewidth',2);
-    set(REC_HANDLES(3),'Position',recPosY_xz,'Curvature',[1 1],'edgecolor','m','linewidth',2);
+    set(REC_HANDLES(1),'Position',recPosZ_xy,'Curvature',[1 1],'linewidth',2);
+    set(REC_HANDLES(2),'Position',recPosX_zy,'Curvature',[1 1],'linewidth',2);
+    set(REC_HANDLES(3),'Position',recPosY_xz,'Curvature',[1 1],'linewidth',2);
     
     UpdateFRAPplot();
 end
