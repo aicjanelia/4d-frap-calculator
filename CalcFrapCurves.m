@@ -1,4 +1,4 @@
-function [frapCorrected, frapMean, fitMetrics] = CalcFrapCurves(center_rcz,radius_rcz,im,imMetadata,flourMean,channel)   
+function [frapCorrected, frapMean, fitMetrics, frapRAW] = CalcFrapCurves(center_rcz,radius_rcz,im,imMetadata,flourMean,channel)   
     maskInd = GetPixelIndList(center_rcz,radius_rcz,imMetadata.Dimensions([2,1,3]));
     
     frapMean = zeros(imMetadata.NumberOfFrames,1);
@@ -8,6 +8,7 @@ function [frapCorrected, frapMean, fitMetrics] = CalcFrapCurves(center_rcz,radiu
         frapMean(t) = max(eps,mean(flourVals(:)));
     end
     
+    frapRAW = frapMean;
     if (~any(frapMean==eps))
         frapMean = ImUtils.ConvertType(frapMean,'double',true);
     end
