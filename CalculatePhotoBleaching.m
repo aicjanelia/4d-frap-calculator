@@ -1,5 +1,5 @@
 function flourMeanPerT = CalculatePhotoBleaching(im,channel,imMeta)
-    global FLOUR_MEAN_PER_T IM_METADATA IM
+    global FLOUR_MEAN_PER_T FLOUR_RAW_PER_T IM_METADATA IM
     if (~exist('channel','var') || isempty(channel))
         channel = 1;
     end
@@ -21,6 +21,8 @@ function flourMeanPerT = CalculatePhotoBleaching(im,channel,imMeta)
         prg.PrintProgress(t);
     end
     prg.ClearProgress(true);
+    
+    FLOUR_RAW_PER_T = FLOUR_MEAN_PER_T;
     FLOUR_MEAN_PER_T = FLOUR_MEAN_PER_T ./ max(FLOUR_MEAN_PER_T(:));
     
     flourMeanPerT = FLOUR_MEAN_PER_T;
