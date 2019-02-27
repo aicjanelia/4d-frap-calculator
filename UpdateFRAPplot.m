@@ -1,4 +1,4 @@
-function UpdateFRAPplot(src,event)
+function UpdateFRAPplot(~,~)
     y1Color = [0.5,0,0.25];
     y2Color = [0,0.6,0];
 
@@ -45,8 +45,10 @@ function UpdateFRAPplot(src,event)
     title(AXES_HANDLES(4),'Frap Data');
     xlabel(AXES_HANDLES(4),'Time (s)')
     ylabel(AXES_HANDLES(4),'Intensity (au)','color',y1Color)
+    p3 = plot(fitMetrics.fm);
+    set(p3,'color','r','DisplayName','A*(1-exp(-tau*t))','parent',AXES_HANDLES(4));
     
-    legend([p1,p2],'location','southeast')
+    legend([p1,p2,p3],'location','southeast')
     
     set(TEXT_HANDLES(1),'string',sprintf('A=%.02f +/- %.02f   t1/2=%.02f +/- %.02f   R-squared:%.02f',fitMetrics.A,fitMetrics.A_confidance,fitMetrics.thalf,fitMetrics.thalf_confidance,fitMetrics.Rsquared));
     
