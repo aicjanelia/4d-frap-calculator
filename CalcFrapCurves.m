@@ -34,4 +34,5 @@ function [frapCorrected, frapMean, fitMetrics, frapRAW] = CalcFrapCurves(center_
     fitMetrics.thalf = thalf1;
     fitMetrics.thalf_confidance = thalf1conf;
     fitMetrics.Rsquared = gof.adjrsquare;
+    fitMetrics.fm = fm;
 end
